@@ -176,20 +176,17 @@ document.addEventListener("DOMContentLoaded", function () {
       "That's a yummy order! We just need to confirm your details before you complete the order (payment will take place on a secure website)."
     );
     if (confirmation) {
-      const parentName = prompt('Please enter your full name:');
-      const childName = prompt("Please enter your child's name and class teacher:");
-      const phoneNumber = prompt('Please enter your phone number:');
-      const email = prompt('Please enter your email:');
+      const parentName = prompt('Please enter your full name and phone number:');
+const childName = prompt("Please enter your child's name and class teacher:");
 
-      if (parentName && childName && phoneNumber && email) {
+      if (parentName && childName) {
         const orderDetails = getOrderSummary();
         const totalAmount = calculateTotalAmount();
 
         const orderData = {
           Parent: parentName,
           Phone: phoneNumber,
-          Email: email,
-	  Child: childName,
+	  "Child-info": childName,
           'Order Breakdown': orderDetails,
           Cost: `${totalAmount} ZAR`,
         };
@@ -219,8 +216,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const orderConfirmation = `
           Parent's Name: ${parentName}
-          Phone Number: ${phoneNumber}
-          Email: ${email}
+          Child's Details: ${childName}
           Order Details:
           ${orderDetails}
           Total Cost: ${totalAmount} ZAR
@@ -228,7 +224,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         alert(orderConfirmation);
 
-        const checkoutUrl = `https://pos.snapscan.io/qr/Bu-elYzb?id=tuckshop_${parentName}&amount=${totalAmount}00`;
+          const checkoutUrl = `https://pos.snapscan.io/qr/Bu-elYzb?id=tuckshop_${parentName}&amount=${totalAmount}00`;
+          alert(`Pay with Snapscan now:\n${checkoutUrl}`);
         window.open(checkoutUrl, '_blank');
       } else {
         alert('Please fill out all the required information.');

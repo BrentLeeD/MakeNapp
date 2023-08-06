@@ -185,7 +185,7 @@ const childName = prompt("Please enter your child's name and class teacher:");
 
         const orderData = {
           Parent: parentName,
-	  "Child-info": childName,
+	  'Child Details': childName,
           'Order Breakdown': orderDetails,
           Cost: `${totalAmount} ZAR`,
         };
@@ -197,7 +197,19 @@ const childName = prompt("Please enter your child's name and class teacher:");
           ${orderDetails}
           Total Cost: ${totalAmount} ZAR
         `;
+ const apiKey = 'UmaiF3c39grmhByWn4MPZVYfklm90CFWPZxRx8cfi3MZrYXEt98tK4Tp7wo';
+        const sheetId = '1A2c5YPjGiMzbTco8MsCbNCHDimWycyrq1iVd1Pulyjg';
+        const apiUrl = `https://api.sheetson.com/v2/sheets/TUCK`;
 
+        fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${apiKey}`,
+            'X-Spreadsheet-Id': sheetId,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(orderData),
+        })
         alert(orderConfirmation);
 
           const checkoutUrl = `https://pos.snapscan.io/qr/Bu-elYzb?id=tuckshop_${parentName}&amount=${totalAmount}00`;

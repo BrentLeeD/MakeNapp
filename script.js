@@ -1,4 +1,4 @@
-﻿document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
   const hotDogInput = document.getElementById("hotDogInput");
   const hotDogSauce = document.getElementById("hotDogSauce");
   const sausageInput = document.getElementById("sausageInput");
@@ -177,10 +177,11 @@
     );
     if (confirmation) {
       const parentName = prompt('Please enter your full name:');
+      const childName = prompt("Please enter your child's name and class teacher:");
       const phoneNumber = prompt('Please enter your phone number:');
       const email = prompt('Please enter your email:');
 
-      if (parentName && phoneNumber && email) {
+      if (parentName && childName && phoneNumber && email) {
         const orderDetails = getOrderSummary();
         const totalAmount = calculateTotalAmount();
 
@@ -188,6 +189,7 @@
           Parent: parentName,
           Phone: phoneNumber,
           Email: email,
+	  Child: childName,
           'Order Breakdown': orderDetails,
           Cost: `${totalAmount} ZAR`,
         };

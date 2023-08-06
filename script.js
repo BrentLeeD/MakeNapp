@@ -185,7 +185,7 @@ const childName = prompt("Please enter your child's name and class teacher:");
 
         const orderData = {
           Parent: parentName,
-	  'Child Details': childName,
+	  Child: childName,
           'Order Breakdown': orderDetails,
           Cost: `${totalAmount} ZAR`,
         };

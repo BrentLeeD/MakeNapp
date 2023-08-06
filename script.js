@@ -185,7 +185,6 @@ const childName = prompt("Please enter your child's name and class teacher:");
 
         const orderData = {
           Parent: parentName,
-          Phone: phoneNumber,
 	  "Child-info": childName,
           'Order Breakdown': orderDetails,
           Cost: `${totalAmount} ZAR`,
@@ -225,7 +224,7 @@ const childName = prompt("Please enter your child's name and class teacher:");
         alert(orderConfirmation);
 
           const checkoutUrl = `https://pos.snapscan.io/qr/Bu-elYzb?id=tuckshop_${parentName}&amount=${totalAmount}00`;
-          alert(`Pay with Snapscan now:\n${checkoutUrl}`);
+          alert(`Pay with Snapscan now`);
         window.open(checkoutUrl, '_blank');
       } else {
         alert('Please fill out all the required information.');

@@ -190,29 +190,6 @@ const childName = prompt("Please enter your child's name and class teacher:");
           Cost: `${totalAmount} ZAR`,
         };
 
-        const apiKey = 'UmaiF3c39grmhByWn4MPZVYfklm90CFWPZxRx8cfi3MZrYXEt98tK4Tp7wo';
-        const sheetId = '1A2c5YPjGiMzbTco8MsCbNCHDimWycyrq1iVd1Pulyjg';
-        const apiUrl = `https://api.sheetson.com/v2/sheets/TUCK`;
-
-        fetch(apiUrl, {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${apiKey}`,
-            'X-Spreadsheet-Id': sheetId,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(orderData),
-        })
-          .then((response) => response.json())
-          .then((result) => {
-            console.log(result);
-            alert('Your order has been recorded successfully!');
-          })
-          .catch((error) => {
-            console.error('Error recording the order:', error);
-            alert('There was an error recording your order. Please try again later.');
-          });
-
         const orderConfirmation = `
           Parent's Name: ${parentName}
           Child's Details: ${childName}

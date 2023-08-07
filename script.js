@@ -1,229 +1,127 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const chocolateInput = document.getElementById("chocolateInput");
-  const sesameInput = document.getElementById("sesameInput");
-  const plainInput = document.getElementById("plainInput");
-  const streuselInput = document.getElementById("streuselInput");
-  const weekSelect = document.getElementById("weekSelect");
-  const addToBasketBtn = document.getElementById("addToBasketBtn");
-  const clearCartBtn = document.getElementById("clearCartBtn");
-  const checkoutBtn = document.getElementById("checkoutBtn");
-  const basketContents = document.getElementById("basketContents");
-  const totalCost = document.getElementById("totalCost");
-
-  // Challah prices in ZAR
-  const chocolatePrice = 40;
-  const sesamePrice = 35;
-  const plainPrice = 35;
-  const streuselPrice = 40;
-
-  // Week 1 to Week 6 prices
-  const weekPrices = {
-    week2: 0,
-    week3: 0,
-    week4: 0,
-    week5: 0,
-    week6: 0,
-  };
-
-  // Store selected flavors and quantities
-  let selectedFlavors = {};
-
-  addToBasketBtn.addEventListener("click", function () {
-    const selectedWeek = weekSelect.value;
-    const chocolateQuantity = parseInt(chocolateInput.value);
-    const sesameQuantity = parseInt(sesameInput.value);
-    const plainQuantity = parseInt(plainInput.value);
-    const streuselQuantity = parseInt(streuselInput.value);
-
-    const orderItems = [];
-    if (chocolateQuantity > 0) {
-      orderItems.push(`${chocolateQuantity} x Chocolate`);
-    }
-    if (sesameQuantity > 0) {
-      orderItems.push(`${sesameQuantity} x Sesame`);
-    }
-    if (plainQuantity > 0) {
-      orderItems.push(`${plainQuantity} x Plain`);
-    }
-    if (streuselQuantity > 0) {
-      orderItems.push(`${streuselQuantity} x Streusel`);
-    }
-
-    const orderSummary = orderItems.join(", ");
-
-    if (orderSummary) {
-      const basketItem = document.createElement("p");
-      basketItem.textContent = `${getWeekDate(selectedWeek)}: ${orderSummary}`;
-      basketContents.appendChild(basketItem);
-
-      // Store selected flavors and quantities in the global variable
-      selectedFlavors[selectedWeek] = {
-        chocolate: chocolateQuantity,
-        sesame: sesameQuantity,
-        plain: plainQuantity,
-        streusel: streuselQuantity,
-      };
-
-      // Update weekPrices object
-      weekPrices[selectedWeek] =
-        chocolateQuantity * chocolatePrice +
-        sesameQuantity * sesamePrice +
-        plainQuantity * plainPrice +
-        streuselQuantity * streuselPrice;
-
-      updateSubtotal();
-    }
-
-    // Reset form quantities
-    chocolateInput.value = "0";
-    sesameInput.value = "0";
-    plainInput.value = "0";
-    streuselInput.value = "0";
-  });
-
-  clearCartBtn.addEventListener("click", function () {
-    const confirmation = confirm("Are you sure you want to clear the cart?");
-    if (confirmation) {
-      basketContents.innerHTML = "";
-      for (const week in weekPrices) {
-        weekPrices[week] = 0;
-      }
-      // Clear the selectedFlavors object
-      selectedFlavors = {};
-      updateSubtotal();
-    }
-  });
-
-  checkoutBtn.addEventListener("click", function () {
-    const confirmation = confirm(
-      "That's a yummy order! We just need to confirm your details before you complete the order (payment will take place on a secure website)."
-    );
-    if (confirmation) {
-      const parentName = prompt("Please enter your full name and contact details:");
-      const phoneNumber = prompt("your child's name and class:");
-
-      if (parentName && phoneNumber) {
-        const orderDetails = `
-          Parent's Name: ${parentName}
-          Phone Number: ${phoneNumber}
-        
-          Order Details:
-          ${getOrderSummary()}
-        `;
-        alert(orderDetails);
-        
-        const totalAmount = calculateTotalAmount();
-const orderData = {
-          Parent: parentName,
-	  Child: phoneNumber,
-          'Order Breakdown': orderDetails,
-          Cost: `${totalAmount} ZAR`,
-        };
-        const apiKey = 'UmaiF3c39grmhByWn4MPZVYfklm90CFWPZxRx8cfi3MZrYXEt98tK4Tp7wo';
-        const sheetId = '1A2c5YPjGiMzbTco8MsCbNCHDimWycyrq1iVd1Pulyjg';
-        const apiUrl = `https://api.sheetson.com/v2/sheets/CHALLAH`;
-
-        fetch(apiUrl, {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${apiKey}`,
-            'X-Spreadsheet-Id': sheetId,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(orderData),
-        })
-                const checkoutUrl = `https://pos.snapscan.io/qr/Bu-elYzb?id=challah_${parentName}&amount=${totalAmount}00`;
-        window.open(checkoutUrl, "_blank");
-        // Clear the form and the selected flavors and quantities after checkout
-        clearForm();
-      } else {
-        alert("Please fill out all the required information.");
-      }
-    }
-  });
-
-  function getOrderSummary() {
-    const orderSummary = [];
-    for (const week in weekPrices) {
-      if (weekPrices[week] > 0) {
-        orderSummary.push(`${getWeekDate(week)}:\n${getOrderItems(week)}\nTotal Cost: R${weekPrices[week]}`);
-      }
-    }
-    return orderSummary.join("\n\n");
-  }
-
-  function getOrderItems(week) {
-    const orderItems = [];
-    const flavors = selectedFlavors[week];
-
-    if (flavors.chocolate > 0) {
-      orderItems.push(`${flavors.chocolate} x Chocolate`);
-    }
-    if (flavors.sesame > 0) {
-      orderItems.push(`${flavors.sesame} x Sesame`);
-    }
-    if (flavors.plain > 0) {
-      orderItems.push(`${flavors.plain} x Plain`);
-    }
-    if (flavors.streusel > 0) {
-      orderItems.push(`${flavors.streusel} x Streusel`);
-    }
-
-    return orderItems.join("\n");
-  }
-
-  function calculateTotalAmount() {
-    let overallTotal = 0;
-    for (const week in weekPrices) {
-      overallTotal += weekPrices[week];
-    }
-    return overallTotal;
-  }
-
-  function getWeekDate(week) {
-    switch (week) {
-      case "week2":
-        return "10 August";
-      case "week3":
-        return "17 August";
-      case "week4":
-        return "24 August";
-      case "week5":
-        return "31 August";
-      case "week6":
-        return "7 September";
-      default:
-        return "Whole Term";
-    }
-  }
-
-  function updateSubtotal() {
-    let overallTotal = 0;
-    for (const week in weekPrices) {
-      overallTotal += weekPrices[week];
-    }
-
-    totalCost.textContent = `Total Cost: ${overallTotal} ZAR`;
-  }
-
-  function clearForm() {
-    chocolateInput.value = "0";
-    sesameInput.value = "0";
-    plainInput.value = "0";
-    streuselInput.value = "0";
-
-    // Clear the selectedFlavors object
-    selectedFlavors = {};
-
-    // Clear the basketContents
-    basketContents.innerHTML = "";
-
-    // Reset weekPrices
-    for (const week in weekPrices) {
-      weekPrices[week] = 0;
-    }
-
-    // Update the total cost
-    updateSubtotal();
-  }
+﻿// Get elements from the DOM
+const themeInput = document.getElementById('theme-input');
+const generateNudgeBtn = document.getElementById('generate-nudge-btn');
+const useNudgeBtn = document.getElementById('use-nudge-btn');
+const nudgeContent = document.getElementById('nudge-content');
+const notesTable = document.getElementById('notes-table');
+// Function to handle "Generate Nudge" button click
+generateNudgeBtn.addEventListener('click', () => {
+  const theme = themeInput.value;
+  generateNudge(theme);
 });
+// Function to generate a new nudge using OpenAI API
+async function generateNudge(theme) {
+  const apiKey = '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'; // Replace with your OpenAI API key
+  const apiEndpoint = 'https://api.openai.com/v1/chat/completions?content-type=application/json';
+
+  const requestBody = {
+  
+       model: 'gpt-3.5-turbo',
+       messages: [
+         {role: 'system', content: 'You are a life coach sending morning nudges to your coachees.'},
+         {role: 'system', content: 'You will now receive requests for morning nudges based on themes or emojis.'},
+         {role: 'user', content: 'Tag: Energy, Productivity'},
+         {role: 'assistant', content: '⚡Time to get your power on'},
+         {role: 'user', content: 'Tag: Opportunity, Growth'},
+         {role: 'assistant', content: '🆕 A new day brings new opportunities'},
+         {role: 'user', content: 'Tag: Challenge, Growth'},
+         {role: 'assistant', content: '🐱 🏍Are you ready to take a step out of your comfort zone today?'},
+         {role: 'user', content: 'Tag: Positivity, Gratitude'},
+         {role: 'assistant', content: '🌻 Ready to start your day off right?'},
+         {role: 'user', content: 'Tag: Achievement, Teamwork'},
+         {role: 'assistant', content: '🍏 Lets crush your goals together today!'},
+         {role: 'user', content: 'Tag: Patience, Perspective'},
+         {role: 'assistant', content: '🐢 Take a step back and appreciate the bigger picture'},
+         {role: 'user', content: 'Tag: Courage, Hope'},
+         {role: 'assistant', content: '🦁Fire up your courage'},
+         {role: 'user', content: 'Tag: Focus, Clarity'},
+         {role: 'assistant', content: '🔍 Stop and take a few moments to gain focus'},
+         {role: 'user', content: 'Tag: Balance, Calm'},
+         {role: 'assistant', content: 'Take a moment to find balance and inner peace'},
+         {role: 'user', content: 'Tag: Creativity, Expression'},
+         {role: 'assistant', content: '🎨 Dont be afraid to let your creativity flow'},
+         {role: 'user', content: 'Tag: ▶, power, start'},
+         {role: 'assistant', content: '▶ Ready to press play and get things moving?'},
+         {role: 'user', content: 'Tag: 👑, Confidence'},
+         {role: 'assistant', content: '👑 Invest in yourself today and trust your own capabilities'},
+         {role: 'user', content: 'Tag: 🌈, Joy'},
+         {role: 'assistant', content: '🌈 Take a moment to breathe in joy and happiness'},
+         {role: 'user', content: 'Tag: Small improvements'},
+         {role: 'assistant', content: '✨ As you take on this day, set small goals that will lead to big improvements'},
+         {role: 'user', content: 'Tag: Health, Wellness'},
+         {role: 'assistant', content: '🍎 What is one healthy choice you can make today?'},
+         {role: 'user', content: 'Tag: 🍀, Mindfulness, Calm'},
+         {role: 'assistant', content: '🍀 Take a few moments to stop and be present in the moment'},
+         {role: 'user', content: 'Tag: 🙏, Gratitude, Thankfulness'},
+         {role: 'assistant', content: '🙏 Take a moment to thank yourself for how far youve come'},
+         {role: 'user', content: 'Tag:Strength '},
+         {role: 'assistant', content: '🏋️‍ unleash your inner strength!'},
+         { role: 'user', content: `Tag: "${theme}"` },
+       ],
+     };
+
+  try {
+    const response = await fetch(apiEndpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch nudge from OpenAI API');
+    }
+
+    const data = await response.json();
+    const newNudge = data.choices[0].message.content;
+    nudgeContent.textContent = newNudge;
+    return newNudge;
+  } catch (error) {
+    console.error(error);
+    nudgeContent.textContent = 'Error: Unable to fetch a new nudge';
+  }
+}
+
+// Function to handle "Use" button click
+useNudgeBtn.addEventListener('click', () => {
+  const nudge = nudgeContent.textContent;
+  const useDate = new Date().toLocaleDateString();
+
+  // Store the nudge and date in local storage (You can replace this with a more robust storage method)
+  const notesData = JSON.parse(localStorage.getItem('notes')) || [];
+  notesData.push({ nudge, useDate });
+  localStorage.setItem('notes', JSON.stringify(notesData));
+
+  // Copy the nudge to clipboard
+  const tempTextarea = document.createElement('textarea');
+  tempTextarea.value = nudge;
+  document.body.appendChild(tempTextarea);
+  tempTextarea.select();
+  document.execCommand('copy');
+  document.body.removeChild(tempTextarea);
+
+  // Show an alert
+  alert('Nudge copied to clipboard!');
+
+  // Reload notes after adding a new one
+  loadNotes();
+});
+
+// Function to load notes from local storage and display in the notes table
+function loadNotes() {
+  notesTable.innerHTML = ''; // Clear existing notes
+
+  const notesData = JSON.parse(localStorage.getItem('notes')) || [];
+  notesData.forEach((note) => {
+    const { nudge, useDate } = note;
+    const noteRow = document.createElement('div');
+    noteRow.classList.add('note-row');
+    noteRow.innerHTML = `<span>${nudge}</span><span>${useDate}</span><button>Delete</button>`;
+    notesTable.appendChild(noteRow);
+  });
+}
+
+// Load notes on page load
+loadNotes();

@@ -244,17 +244,17 @@ const childName = prompt("Please enter your child's name and class teacher:");
   function getWeekDate(week) {
     switch (week) {
       case 'week1':
-        return 'Week 1 (3 August)';
+        return 'Week 1 (13 October)';
       case 'week2':
-        return 'Week 2 (10 August)';
+        return 'Week 2 (20 October)';
       case 'week3':
-        return 'Week 3 (17 August)';
+        return 'Week 3 (27 October)';
       case 'week4':
         return 'Week 4 (24 August)';
       case 'week5':
-        return 'Week 5 (31 August)';
+        return 'Week 5 (03 November)';
       case 'week6':
-        return 'Week 6 (7 September)';
+        return 'Week 6 (10 November)';
       default:
         return 'Whole Term';
     }

@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Order items
   const orderItems = [];
 
-  // Week 1 to Week 6 prices
+  // Week 1 to Week 8 prices
   const weekPrices = {
     week1: { amount: 0, order: '' },
     week2: { amount: 0, order: '' },
@@ -37,6 +37,8 @@ document.addEventListener("DOMContentLoaded", function () {
     week4: { amount: 0, order: '' },
     week5: { amount: 0, order: '' },
     week6: { amount: 0, order: '' },
+    week7: { amount: 0, order: '' },
+    week8: { amount: 0, order: '' },
   };
 
   addToBasketBtn.addEventListener("click", function () {
@@ -250,11 +252,15 @@ const childName = prompt("Please enter your child's name and class teacher:");
       case 'week3':
         return 'Week 3 (27 October)';
       case 'week4':
-        return 'Week 4 (24 August)';
+        return 'Week 4 (03 November)';
       case 'week5':
-        return 'Week 5 (03 November)';
+        return 'Week 5 (10 November)';
       case 'week6':
-        return 'Week 6 (10 November)';
+        return 'Week 6 (17 November)';
+      case 'week7':
+        return 'Week 7 (24 November)';
+      case 'week8':
+        return 'Week 8 (1 December)';
       default:
         return 'Whole Term';
     }
